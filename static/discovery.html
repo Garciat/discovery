@@ -35,7 +35,7 @@ function loadProfile(service_name, handle, service_cell, callback) {
 $(function () {
 	var table = $('table');
 	
-	services.forEach(function (service_name) {
+	services.concat('Score').forEach(function (service_name) {
 		table.find('tr').append($('<th />').html(service_name));
 	});
 	
