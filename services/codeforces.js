@@ -4,6 +4,10 @@ var $ = require('jquery');
 function grab_profile(handle, callback) {
 	var req = http.get('http://codeforces.com/profile/' + handle);
 	
+	req.setTimeout(10000, function () {
+		callback('request timed out', null);
+	});
+	
 	req.on('response', function (res) {
 		// Codeforces will redirect us to the home page instead of 404-ing
 		if (302 === res.statusCode) {

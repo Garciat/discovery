@@ -10,6 +10,10 @@ function grab_profile(handle, callback) {
 		// Force Algorithm profile tab
 		var req = http.get(profile_link + '&tab=alg');
 		
+		req.setTimeout(10000, function () {
+			callback('request timed out', null);
+		});
+		
 		req.on('response', function (res) {
 			var data = '';
 			
@@ -29,6 +33,10 @@ function grab_profile(handle, callback) {
 function grab_profile_link(handle, callback) {
 	var req = http.get(
 		'http://community.topcoder.com/tc?module=SimpleSearch&ha=' + handle);
+	
+	req.setTimeout(10000, function () {
+		callback('request timed out', null);
+	});
 	
 	req.on('response', function (res) {
 		// We don't need the request body either way
