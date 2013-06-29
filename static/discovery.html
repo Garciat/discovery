@@ -7,6 +7,7 @@
 		
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/async/0.2.7/async.min.js"></script>
+		<script src="//ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 		<!-- <script src="//fb.me/react-0.3.3.min.js"></script>
 		<script src="//fb.me/JSXTransformer-0.3.3.js"></script> -->
 		
@@ -39,31 +40,45 @@ $(function () {
 		table.find('tr').append($('<th />').html(service_name));
 	});
 	
-	handles.forEach(function (handle) {
-		var handle_row = $('<tr />').append($('<td />').html(handle));
-		
-		async.map(
-			services,
-			function (service_name, callback) {
-				var service_cell = $('<td />').html('Loading...');
-				
-				handle_row.append(service_cell);
-				
-				loadProfile(service_name, handle, service_cell, callback);
-			},
-			function (err, results) {
-				var total = 0;
-				
-				results.forEach(function (params) {
-					total += factors[params[0]] * params[1];
-				});
-				
-				handle_row.append($('<td />').html(total.toFixed(2)));
-			}
-		);
-		
-		table.append(handle_row);
-	});
+	async.each(
+		handles,
+		function (handle, callback) {
+			var handle_row = $('<tr />').append($('<td />').html(handle));
+			
+			async.map(
+				services,
+				function (service_name, callback) {
+					var service_cell = $('<td />').html('Loading...');
+					
+					handle_row.append(service_cell);
+					
+					loadProfile(service_name, handle, service_cell, callback);
+				},
+				function (err, results) {
+					var total = 0;
+					
+					results.forEach(function (params) {
+						total += factors[params[0]] * params[1];
+					});
+					
+					handle_row.append($('<td />').html(total.toFixed(2)));
+					
+					callback(null);
+				}
+			);
+			
+			table.children('tbody').append(handle_row);
+		},
+		function (err) {
+			table.dataTable({
+				"bPaginate": false,
+				"bLengthChange": false,
+				"bFilter": false,
+				"bInfo": false,
+				"bAutoWidth": false
+			}).fnSort([[4, 'desc']]);
+		}
+	);
 });
 		</script>
 	</head>
@@ -73,6 +88,7 @@ $(function () {
 			<thead>
 				<tr><td></td></tr>
 			</thead>
+			<tbody></tbody>
 		</table>
 	</body>
 </html>
