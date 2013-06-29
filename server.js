@@ -59,8 +59,11 @@ services.forEach(function (service) {
 	app.get('/api/' + service.serviceId +'/:handle', service.requestHandler);
 });
 
-app.listen(process.env.PORT || 8080, process.env.IP || '127.0.0.1');
+var port = process.env.PORT || 8080;
+var host = process.env.IP || '127.0.0.1';
 
-console.log('server listening')
+app.listen(port, host, function () {
+	console.log('server listening on', host, port);
+});
 
 // (:
