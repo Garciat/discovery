@@ -1,0 +1,12 @@
+{
+	"name": "discovery",
+	"description": "Competitive programming tracking tool.",
+	"author": "Gabriel Garcia <me@garciat.com>",
+	"version": "1.0.0",
+	
+	"dependencies": {
+		"express": "3.*",
+		"jquery": "*",
+		"async": "*"
+	}
+}

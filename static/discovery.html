@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Team Discovery</title>
+		
+		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" />
+		
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/async/0.2.7/async.min.js"></script>
+		<!-- <script src="//fb.me/react-0.3.3.min.js"></script>
+		<script src="//fb.me/JSXTransformer-0.3.3.js"></script> -->
+		
+		<script>
+var handles = ['garciat', 'alexpizarroj', 'ademord', 'josemanuel101'];
+var factors = {codeforces: 0.3, topcoder: 0.4, codechef: 0.3};
+var services = Object.keys(factors);
+
+function loadProfile(service_name, handle, service_cell, callback) {
+	$.getJSON('/api/' + service_name + '/' + handle, function (res) {
+		var profile = res.profile;
+		var rating;
+		
+		if (res.error || !profile.rating) {
+			rating = 0;
+		} else {
+			rating = profile.rating;
+		}
+		
+		service_cell.html(rating.toFixed(2));
+		
+		callback(null, [service_name, rating]);
+	});
+}
+
+$(function () {
+	var table = $('table');
+	
+	services.forEach(function (service_name) {
+		table.find('tr').append($('<th />').html(service_name));
+	});
+	
+	handles.forEach(function (handle) {
+		var handle_row = $('<tr />').append($('<td />').html(handle));
+		
+		async.map(
+			services,
+			function (service_name, callback) {
+				var service_cell = $('<td />').html('Loading...');
+				
+				handle_row.append(service_cell);
+				
+				loadProfile(service_name, handle, service_cell, callback);
+			},
+			function (err, results) {
+				var total = 0;
+				
+				results.forEach(function (params) {
+					total += factors[params[0]] * params[1];
+				});
+				
+				handle_row.append($('<td />').html(total.toFixed(2)));
+			}
+		);
+		
+		table.append(handle_row);
+	});
+});
+		</script>
+	</head>
+	
+	<body>
+		<table class="table">
+			<thead>
+				<tr><td></td></tr>
+			</thead>
+		</table>
+	</body>
+</html>
