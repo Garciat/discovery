@@ -60,10 +60,15 @@ services.forEach(function (service) {
 });
 
 var port = process.env.PORT || 8080;
-var host = process.env.IP || '127.0.0.1';
 
-app.listen(port, host, function () {
-	console.log('server listening on', host, port);
-});
+if (process.env.IP) {
+	app.listen(port, process.env.IP, function () {
+		console.log('server listening on', host, port);
+	});
+} else {
+	app.listen(port, function () {
+		console.log('server listening on', port);
+	});
+}
 
 // (:
