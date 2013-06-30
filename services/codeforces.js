@@ -61,7 +61,7 @@ function parse_profile(html) {
 	
 	var organization_str = '';
 	
-	if ('div' === submeta_node.get(0).nodeName.toLowerCase()) {
+	if (submeta_node.get(0) && 'div' === submeta_node.get(0).nodeName.toLowerCase()) {
 		organization_str = submeta_node.children('a').text();
 	}
 	
