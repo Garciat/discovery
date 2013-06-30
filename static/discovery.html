@@ -18,14 +18,13 @@ var services = Object.keys(factors);
 
 function loadProfile(service_name, handle, service_cell, callback) {
 	$.getJSON('/api/' + service_name + '/' + handle, function (res) {
-		var profile = res.profile;
-		var rating;
-		
-		if (res.error || !profile.rating) {
-			rating = 0;
-		} else {
-			rating = profile.rating;
+		if (res.error) {
+			service_cell.html(res.error);
+			
+			return callback(null, [service_name, 0]);
 		}
+		
+		var rating = res.profile.rating || 0;
 		
 		service_cell.html(rating.toFixed(2));
 		
