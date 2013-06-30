@@ -1,10 +1,6 @@
-var http = require('http');
 var express = require('express');
-var $ = require('jquery');
-var async = require('async');
 var fs = require('fs');
 var path = require('path');
-var querystring = require('querystring');
 
 function isValidServiceModule(module) {
 	if (!module.serviceId || 'string' !== typeof module.serviceId) {
